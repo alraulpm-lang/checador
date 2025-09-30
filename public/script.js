@@ -54,17 +54,26 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Función simple para parsear CSV (asume la primera fila son encabezados)
+// Función simple para parsear CSV (asume la primera fila son encabezados)
   function parseCSV(csv) {
-    const lines = csv.split("\n");
+    // FIX: Se usa una expresión regular para aceptar saltos de línea de Windows (\r\n) y Unix (\n)
+    const lines = csv.split(/\r?\n/);
+    
+    if (lines.length < 2) return []; // Si no hay datos, retorna un array vacío
+
     const headers = lines[0].split(",").map((header) => header.trim());
     const data = [];
 
     for (let i = 1; i < lines.length; i++) {
+      // Ignorar líneas vacías al final del archivo
+      if (lines[i].trim() === "") continue;
+
       const currentline = lines[i].split(",");
       if (currentline.length === headers.length) {
-        // Asegura que la línea tiene el número correcto de columnas
         const item = {};
         for (let j = 0; j < headers.length; j++) {
+          // Asigna el valor a la propiedad correspondiente del objeto.
+          // Ej: item['CODIGO_BARRAS'] = '750...'
           item[headers[j]] = currentline[j].trim();
         }
         data.push(item);
