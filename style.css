@@ -1,0 +1,205 @@
+:root {
+  --primary-blue: #0033a1; /* Coppel Blue */
+  --secondary-yellow: #ffd700; /* Coppel Yellow */
+  --text-dark: #333;
+  --text-light: #666;
+  --background-light: #f4f7f6; /* Fondo general */
+  --card-background: #ffffff;
+  --border-color: #eee;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: var(--background-light);
+  color: var(--text-dark);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 15px;
+}
+
+.view {
+  display: none; /* Las vistas se ocultan por defecto y JS las mostrará */
+}
+
+.view.active {
+  display: block;
+}
+
+/* Header General */
+.app-header {
+  background-color: var(--primary-blue);
+  color: white;
+  padding: 15px 20px;
+  text-align: center;
+  border-radius: 8px 8px 0 0; /* Bordes redondeados arriba */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: sticky; /* Sticky header */
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: 1.5em;
+  font-weight: 600;
+}
+
+/* Estilos de la Vista del Escáner */
+#scanner-view {
+  text-align: center;
+}
+
+#interactive.viewport {
+  width: 100%;
+  max-width: 400px; /* Tamaño máximo del visor del escáner */
+  height: 250px;
+  margin: 20px auto;
+  position: relative;
+  border: 2px solid var(--primary-blue);
+  overflow: hidden; /* Asegura que el video no se salga */
+  border-radius: 8px;
+  background-color: #000;
+}
+
+#interactive.viewport video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Asegura que el video llene el contenedor sin distorsionar */
+  transform: scaleX(-1); /* Refleja horizontalmente si la cámara es frontal */
+}
+
+.instruction {
+  font-size: 1.1em;
+  color: var(--text-light);
+  margin-top: 10px;
+}
+
+.feedback {
+  margin-top: 15px;
+  font-weight: bold;
+  color: var(--text-dark);
+}
+
+/* Estilos de la Vista de Detalles del Producto */
+.product-header {
+  justify-content: flex-start; /* Alinea la flecha a la izquierda */
+  padding-left: 10px; /* Espacio para la flecha */
+}
+
+.product-header h1 {
+  flex-grow: 1; /* Permite que el título ocupe el espacio restante */
+  text-align: center;
+  padding-right: 40px; /* Compensar el espacio de la flecha para centrar el título */
+}
+
+.back-button {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+}
+
+.back-button svg {
+  width: 28px;
+  height: 28px;
+}
+
+.product-info-card {
+  background-color: var(--card-background);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  margin-top: 20px;
+  padding: 25px;
+  text-align: center;
+}
+
+.product-info-card img {
+  max-width: 100%;
+  height: auto;
+  max-height: 250px; /* Limitar altura de imagen */
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border: 1px solid var(--border-color);
+  object-fit: contain; /* Asegura que la imagen se vea completa */
+}
+
+.product-info-card h2 {
+  font-size: 1.8em;
+  color: var(--primary-blue);
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.product-price {
+  font-size: 2.2em;
+  font-weight: bold;
+  color: var(--secondary-yellow); /* Precio en amarillo destacado */
+  margin: 10px 0 20px 0;
+}
+
+.product-description {
+  font-size: 1.1em;
+  color: var(--text-light);
+  margin-bottom: 20px;
+}
+
+.product-sku {
+  font-size: 0.95em;
+  color: var(--text-light);
+  font-weight: 500;
+}
+
+/* Media Queries para Responsividad */
+@media (max-width: 600px) {
+  .app-header h1 {
+    font-size: 1.3em;
+  }
+
+  .product-info-card {
+    padding: 15px;
+  }
+
+  .product-info-card h2 {
+    font-size: 1.5em;
+  }
+
+  .product-price {
+    font-size: 1.8em;
+  }
+
+  .product-description {
+    font-size: 1em;
+  }
+}
+
+@media (max-width: 400px) {
+  .app-header h1 {
+    font-size: 1.2em;
+  }
+  .product-info-card img {
+    max-height: 180px;
+  }
+  .back-button svg {
+    width: 24px;
+    height: 24px;
+  }
+}
