@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // --- Elementos del DOM ---
+  // --- ELEMENTOS ---
   const scannerView = document.getElementById("scanner-view");
   const productDetailsView = document.getElementById("product-details-view");
   const backButton = document.getElementById("back-button");
@@ -10,134 +10,114 @@ document.addEventListener("DOMContentLoaded", () => {
   const productDescription = document.getElementById("product-description");
   const productSKU = document.getElementById("product-sku");
 
-  // --- Base de datos ---
   let productDatabase = [];
-
-  // --- URL de Google Sheet ---
   const GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQUkZZSIVv2DdmP22Okp_GEjqGaKU6IikB9oiL4oZF2x9VYHqXMo48if_Du6VM67SE2MF-8YRfW-YP2/pub?gid=677583262&single=true&output=csv";
 
-  // --- Funciones ---
+  // --- FUNCIONES ---
 
   function switchView(viewId) {
     scannerView.classList.remove("active");
     productDetailsView.classList.remove("active");
-    document.getElementById(viewId).classList.add("active");
+    if (document.getElementById(viewId)) {
+      document.getElementById(viewId).classList.add("active");
+    }
   }
 
-  function showScannerFeedback(message, type = "info") {
-    scannerFeedback.textContent = message;
-    scannerFeedback.className = `feedback ${type}`;
+  function showFeedback(message, type = "info") {
+    if (scannerFeedback) {
+      scannerFeedback.textContent = message;
+      scannerFeedback.style.color = type === "error" ? "red" : "#333";
+    }
   }
 
-  function parseCSV(csv) {
-    const lines = csv.split(/\r?\n/);
+  function parseCSV(csvText) {
+    const lines = csvText.split(/\r?\n/);
     if (lines.length < 2) return [];
-
-    const headers = lines[0].split(",").map(header => header.trim());
+    const headers = lines[0].split(",").map(h => h.trim());
     const data = [];
-
     for (let i = 1; i < lines.length; i++) {
       if (lines[i].trim() === "") continue;
-      const currentline = lines[i].split(",");
-      if (currentline.length === headers.length) {
+      const values = lines[i].split(",");
+      if (values.length === headers.length) {
         const item = {};
-        for (let j = 0; j < headers.length; j++) {
-          item[headers[j]] = currentline[j].trim();
-        }
+        headers.forEach((header, index) => {
+          item[header] = values[index].trim();
+        });
         data.push(item);
       }
     }
     return data;
   }
 
-  async function loadProductData() {
-    showScannerFeedback("Cargando productos...", "info");
+  async function loadProducts() {
+    showFeedback("Cargando productos...", "info");
     try {
-      // Usamos un proxy para evitar problemas de CORS, que es una causa común de fallo.
-      const response = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(GOOGLE_SHEET_CSV_URL)}`);
+      const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(GOOGLE_SHEET_CSV_URL)}`;
+      const response = await fetch(proxyUrl);
+      if (!response.ok) throw new Error(`Error de red: ${response.status}`);
       
-      if (!response.ok) {
-        throw new Error(`Error de red: ${response.statusText}`);
-      }
-
       const csvText = await response.text();
-      console.log("CSV recibido:", csvText); // Log para depurar
-      
       productDatabase = parseCSV(csvText);
       
       if (productDatabase.length > 0) {
-        showScannerFeedback(`Productos cargados (${productDatabase.length}). Listo para escanear.`, "success");
+        showFeedback(`Productos cargados (${productDatabase.length}). Listo para escanear.`, "success");
       } else {
-        showScannerScannerFeedback("Conectado, pero no se encontraron productos en el archivo.", "error");
+        showFeedback("Conexión exitosa, pero no se encontraron productos.", "error");
       }
-      console.log("Base de datos de productos cargada:", productDatabase);
-
     } catch (error) {
-      console.error("Error al cargar la base de datos de productos:", error);
-      showScannerFeedback("Error al cargar productos. Revisa la consola para más detalles.", "error");
+      console.error("FALLO LA CARGA DE PRODUCTOS:", error);
+      showFeedback("Error al conectar con la base de datos.", "error");
     }
   }
 
-  function findProductAndDisplay(barcode) {
-    if (productDatabase.length === 0) {
-      showScannerFeedback("La base de datos de productos no está cargada.", "error");
-      return;
-    }
-
+  function displayProduct(barcode) {
     const product = productDatabase.find(p => p.CODIGO_BARRAS === barcode);
-
     if (product) {
-      productImage.src = product.IMAGEN_URL || "https://via.placeholder.com/200x200?text=Sin+Imagen";
+      productImage.src = product.IMAGEN_URL || "";
       productName.textContent = product.NOMBRE;
       productPrice.textContent = `$${parseFloat(product.PRECIO || 0).toFixed(2)}`;
-      productDescription.textContent = product.DESCRIPCION || "Sin descripción disponible.";
+      productDescription.textContent = product.DESCRIPCION;
       productSKU.textContent = product.CODIGO_BARRAS;
       switchView("product-details-view");
     } else {
-      showScannerFeedback(`Producto con código ${barcode} no encontrado.`, "error");
+      showFeedback(`Producto ${barcode} no encontrado.`, "error");
     }
   }
 
-  function initializeScanner() {
+  function startScanner() {
+    // Primero, verifica si la librería Quagga existe
+    if (typeof Quagga === "undefined") {
+      showFeedback("Error crítico: La librería del escáner no se pudo cargar.", "error");
+      console.error("Quagga is not defined. Check the script tag in index.html.");
+      return;
+    }
+
     Quagga.init({
       inputStream: {
         name: "Live",
         type: "LiveStream",
         target: document.querySelector('#interactive'),
-        constraints: {
-          width: 640,
-          height: 480,
-          facingMode: "environment"
-        },
+        constraints: { facingMode: "environment" },
       },
-      decoder: {
-        readers: ["ean_reader", "upc_reader", "code_128_reader", "code_39_reader"]
-      },
+      decoder: { readers: ["ean_reader"] },
     }, (err) => {
       if (err) {
-        console.error("Error de Quagga:", err);
-        showScannerFeedback("Error al iniciar la cámara. Asegúrate de dar permisos en tu navegador.", "error");
+        console.error("FALLO LA INICIALIZACIÓN DE LA CÁMARA:", err);
+        showFeedback("No se pudo iniciar la cámara. Revisa los permisos.", "error");
         return;
       }
-      console.log("Quagga inicializado. Listo para empezar.");
       Quagga.start();
     });
 
-    Quagga.onDetected((result) => {
-      const code = result.codeResult.code;
-      console.log("Código detectado:", code);
-      findProductAndDisplay(code);
-    });
+    Quagga.onDetected(result => displayProduct(result.codeResult.code));
   }
 
-  // --- Event Listeners ---
+  // --- INICIO ---
+  
   backButton.addEventListener("click", () => {
     switchView("scanner-view");
   });
 
-  // --- Inicio de la Aplicación ---
-  
-  // Inicia la cámara y la carga de datos al mismo tiempo.
-  initializeScanner();
-  loadProductData();
+  startScanner();
+  loadProducts();
 });
