@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   // --- Configuración ---
   const GOOGLE_SHEET_CSV_URL =
-    "https://docs.google.com/spreadsheets/d/1b9mAxx2JnNtpZB-yD3MRmoxyr9P7XjqlLbXEtFi1r5Q/edit?gid=677583262#gid=677583262"; // ¡IMPORTANTE! Reemplaza con tu URL
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vQUkZZSIVv2DdmP22Okp_GEjqGaKU6IikB9oiL4oZF2x9VYHqXMo48if_Du6VM67SE2MF-8YRfW-YP2/pub?gid=677583262&single=true&output=csv"; // ¡IMPORTANTE! Reemplaza con tu URL
   let productDatabase = []; // Aquí almacenaremos los productos cargados del Sheet
 
   // --- Elementos del DOM ---

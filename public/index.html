@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Checador de Precios</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://unpkg.com/@ericblade/quagga2@1.9.3/dist/quagga.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div id="scanner-view" class="view active">
+        <header class="app-header">
+          <h1>Escanea tu producto.V1</h1>
+        </header>
+        <div id="interactive" class="viewport"></div>
+        <p class="instruction">Apunta la cámara al código de barras.</p>
+        <div id="scanner-feedback" class="feedback"></div>
+      </div>
+
+      <div id="product-details-view" class="view">
+        <header class="app-header product-header">
+          <button id="back-button" class="back-button">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+            >
+              <path
+                d="M12.707 17.293a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414l5-5a1 1 0 111.414 1.414L8.414 11H18a1 1 0 110 2H8.414l4.293 4.293a1 1 0 010 1.414z"
+              />
+            </svg>
+          </button>
+          <h1>Detalles del Producto</h1>
+        </header>
+        <div class="product-info-card">
+          <img
+            id="product-image"
+            src="https://via.placeholder.com/200x200?text=Sin+Imagen"
+            alt="Imagen del producto"
+          />
+          <h2 id="product-name">Nombre del Producto</h2>
+          <p class="product-price" id="product-price">$0.00</p>
+          <p class="product-description" id="product-description">
+            Descripción breve del producto.
+          </p>
+          <p class="product-sku">SKU: <span id="product-sku">N/A</span></p>
+        </div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

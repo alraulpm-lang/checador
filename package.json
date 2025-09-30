@@ -1,8 +1,8 @@
 {
-  "name": "static",
+  "name": "checador-main",
   "version": "1.0.0",
-  "description": "This is a static template with no bundling",
-  "main": "index.html",
+  "description": "",
+  "main": "script.js",
   "scripts": {
     "start": "serve"
   },
@@ -22,6 +22,6 @@
   },
   "homepage": "https://github.com/codesandbox-app/static-template#readme",
   "devDependencies": {
-    "serve": "^11.2.0"
+    "serve": "^11.3.2"
   }
 }
