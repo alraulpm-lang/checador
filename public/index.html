@@ -1,37 +1,37 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Checador de Precios</title>
     <link rel="stylesheet" href="style.css" />
     <script src="https://cdn.jsdelivr.net/npm/@ericblade/quagga2@1.9.3/dist/quagga.min.js"></script>
-  </head>
-  <body>
+</head>
+<body>
     <div class="container">
-      <div id="scanner-view" class="view active">
-        <header class="app-header">
-          <h1>Escanea tu producto</h1>
-        </header>
-        <div id="interactive" class="viewport"></div>
-        <p class="instruction">Apunta la cámara al código de barras.</p>
-        <div id="scanner-feedback" class="feedback"></div>
-      </div>
-
-      <div id="product-details-view" class="view">
-        <header class="app-header product-header">
-          <button id="back-button" class="back-button">&#8592;</button>
-          <h1>Detalles del Producto</h1>
-        </header>
-        <div class="product-info-card">
-          <img id="product-image" src="" alt="Imagen del producto" />
-          <h2 id="product-name"></h2>
-          <p class="product-price" id="product-price"></p>
-          <p class="product-description" id="product-description"></p>
-          <p class="product-sku">SKU: <span id="product-sku"></span></p>
+        <div id="scanner-view" class="view active">
+            <header class="app-header">
+                <h1>Escanea tu producto</h1>
+            </header>
+            <div id="interactive" class="viewport"></div>
+            <p class="instruction">Apunta la cámara al código de barras.</p>
+            <div id="scanner-feedback" class="feedback"></div>
         </div>
-      </div>
+
+        <div id="product-details-view" class="view">
+            <header class="app-header product-header">
+                <button id="back-button" class="back-button">&#8592; Regresar</button>
+                <h1>Detalles del Producto</h1>
+            </header>
+            <div class="product-info-card">
+                <img id="product-image" src="" alt="Imagen del producto" />
+                <h2 id="product-name"></h2>
+                <p class="product-price" id="product-price"></p>
+                <p class="product-description" id="product-description"></p>
+                <p class="product-sku">SKU: <span id="product-sku"></span></p>
+            </div>
+        </div>
     </div>
     <script src="script.js"></script>
-  </body>
+</body>
 </html>

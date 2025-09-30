@@ -14,12 +14,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQUkZZSIVv2DdmP22Okp_GEjqGaKU6IikB9oiL4oZF2x9VYHqXMo48if_Du6VM67SE2MF-8YRfW-YP2/pub?gid=677583262&single=true&output=csv";
 
   // --- FUNCIONES ---
-
   function switchView(viewId) {
-    scannerView.classList.remove("active");
-    productDetailsView.classList.remove("active");
-    if (document.getElementById(viewId)) {
-      document.getElementById(viewId).classList.add("active");
+    if (scannerView) scannerView.classList.remove("active");
+    if (productDetailsView) productDetailsView.classList.remove("active");
+    const viewToShow = document.getElementById(viewId);
+    if (viewToShow) {
+      viewToShow.classList.add("active");
     }
   }
 
@@ -55,10 +55,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(GOOGLE_SHEET_CSV_URL)}`;
       const response = await fetch(proxyUrl);
       if (!response.ok) throw new Error(`Error de red: ${response.status}`);
-      
       const csvText = await response.text();
       productDatabase = parseCSV(csvText);
-      
       if (productDatabase.length > 0) {
         showFeedback(`Productos cargados (${productDatabase.length}). Listo para escanear.`, "success");
       } else {
@@ -85,13 +83,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function startScanner() {
-    // Primero, verifica si la librería Quagga existe
     if (typeof Quagga === "undefined") {
-      showFeedback("Error crítico: La librería del escáner no se pudo cargar.", "error");
-      console.error("Quagga is not defined. Check the script tag in index.html.");
+      showFeedback("Error: La librería del escáner no se pudo cargar.", "error");
       return;
     }
-
     Quagga.init({
       inputStream: {
         name: "Live",
@@ -103,20 +98,20 @@ document.addEventListener("DOMContentLoaded", () => {
     }, (err) => {
       if (err) {
         console.error("FALLO LA INICIALIZACIÓN DE LA CÁMARA:", err);
-        showFeedback("No se pudo iniciar la cámara. Revisa los permisos.", "error");
+        showFeedback("No se pudo iniciar la cámara. Revisa los permisos del navegador.", "error");
         return;
       }
       Quagga.start();
     });
-
     Quagga.onDetected(result => displayProduct(result.codeResult.code));
   }
 
-  // --- INICIO ---
-  
-  backButton.addEventListener("click", () => {
-    switchView("scanner-view");
-  });
+  // --- INICIO DE LA APP ---
+  if (backButton) {
+    backButton.addEventListener("click", () => {
+      switchView("scanner-view");
+    });
+  }
 
   startScanner();
   loadProducts();
