@@ -1,4 +1,3 @@
-// --- ELEMENTOS ---
 const scannerView = document.getElementById("scanner-view");
 const productDetailsView = document.getElementById("product-details-view");
 const backButton = document.getElementById("back-button");
@@ -12,7 +11,6 @@ const productSKU = document.getElementById("product-sku");
 let productDatabase = [];
 const GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQUkZZSIVv2DdmP22Okp_GEjqGaKU6IikB9oiL4oZF2x9VYHqXMo48if_Du6VM67SE2MF-8YRfW-YP2/pub?gid=677583262&single=true&output=csv";
 
-// --- FUNCIONES ---
 function switchView(viewId) {
     if (scannerView) scannerView.classList.remove("active");
     if (productDetailsView) productDetailsView.classList.remove("active");
@@ -105,7 +103,6 @@ function startScanner() {
     Quagga.onDetected(result => displayProduct(result.codeResult.code));
 }
 
-// --- INICIO DE LA APP ---
 if (backButton) {
     backButton.addEventListener("click", () => {
         switchView("scanner-view");
